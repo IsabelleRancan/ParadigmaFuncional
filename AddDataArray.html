@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clientes Maiores de Idade</title>
+  </head>
+  <body>
+
+    <h2>Adicionar Novo Cliente</h2>
+        Nome: <input type="text" id="nomeCliente">
+        Idade: <input type="number" id="idadeCliente">
+        <button onclick="adicionarCliente()">Adicionar Cliente</button>
+    <h1>Clientes Maiores de Idade:</h1>
+
+    <ul id="lista-maioridade"></ul>
+
+    <script>
+
+        function adicionarCliente(){
+            const nome = document.getElementById('nomeCliente').value;
+            const idade = document.getElementById('idadeCliente').valueAsNumber;
+            clientes.push({"nome":nome, "idade":idade});
+            const maioridade = clientes.filter(({ idade }) => idade > 15);
+        }
+
+      const clientes = [
+        { nome: "José", idade: 26 },
+        { nome: "Carlos", idade: 55 },
+        { nome: "Manoel", idade: 5 },
+        { nome: "Paula", idade: 2 },
+      ];
+
+
+      console.log(clientes);
+
+      const listaMaioridade = document.getElementById('lista-maioridade');
+
+      maioridade.forEach(cliente => {
+        const item = document = document.createElement('li');
+        item.textContent = `${cliente.nome} - ${cliente.idade} anos`;
+        listaMaioridade.appendChild(item);
+      });
+
+    </script>
+  </body>
+</html>
