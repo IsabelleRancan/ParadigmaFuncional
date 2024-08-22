@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotação do Dólar Americano</title>
+</head>
+<body>
+    <h1>Cotação do Dólar Americano</h1>
+    <div id="media"></div>
+    <h2>Cotações Mensais</h2>
+    <ul id="cotacoes-mensais"></ul>
+
+    <script>
+        const url = 'https://economia.awesomeapi.com.br/json/daily/USD-BRL/365'; // Últimos 365 dias
+
+        async function obterCotacoes() {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                let soma = 0;
+                let cotacoes = {};
+                let contagem = {};
+
+                data.forEach((item) => {
+                    const valor = parseFloat(item.bid);
+                    const dataItem = new Date(item.timestamp * 1000);
+                    const mes = dataItem.getMonth(); // mês (0-11)
+                    const ano = dataItem.getFullYear();
+
+                    const chave = `${ano}-${mes}`;
+
+                    if (!cotacoes[chave]) {
+                        cotacoes[chave] = 0;
+                        contagem[chave] = 0;
+                    }
+
+                    cotacoes[chave] += valor;
+                    contagem[chave] += 1;
+                });
+
+                const cotacoesMensais = Object.keys(cotacoes).map(chave => {
+                    return {
+                        mesAno: chave,
+                        valor: cotacoes[chave] / contagem[chave] // média do mês
+                    };
+                }).sort((a, b) => new Date(a.mesAno) - new Date(b.mesAno));
+
+                cotacoesMensais.slice(-12).forEach((item) => {
+                    soma += item.valor;
+
+                    const [ano, mes] = item.mesAno.split('-');
+                    const dataItem = new Date(ano, mes);
+                    const mesNome = dataItem.toLocaleString('default', { month: 'long' });
+
+                    const li = document.createElement('li');
+                    li.textContent = `${mesNome} ${ano}: R$ ${item.valor.toFixed(2)}`;
+                    document.getElementById('cotacoes-mensais').appendChild(li);
+                });
+
+                const media = soma / cotacoesMensais.slice(-12).length;
+                document.getElementById('media').textContent = `Média dos últimos 12 meses: R$ ${media.toFixed(2)}`;
+
+            } catch (error) {
+                console.error('Erro ao obter as cotações:', error);
+            }
+        }
+
+        obterCotacoes();
+    </script>
+</body>
+</html>
