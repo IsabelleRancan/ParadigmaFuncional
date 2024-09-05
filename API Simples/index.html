@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Frontend</title>
+</head>
+<body>
+    <h1>API Frontend</h1>
+
+    <button onclick="fetchGreeting()">Fetch Greeting</button>
+    <div id="greetResponse"></div>
+
+    <h2>Get Echo</h2>
+    <input type="text" id="echoMessage" placeholder="Enter message">
+    <button onclick="getEcho()">Get Message</button>
+    <div id="echoResponse"></div>
+
+    <h2>Update Data</h2>
+    <input type="text" id="updateId" placeholder="Enter ID">
+    <input type="text" id="updateData" placeholder="Enter new data">
+    <button onclick="getUpdate()">Get Update</button>
+    <div id="updateResponse"></div>
+
+    <script>
+        function fetchGreeting() {
+            fetch('http://localhost:3000/api/greet')
+                .then(response => response.json())
+                .then(data => document.getElementById('greetResponse').innerText = JSON.stringify(data));
+        }
+
+        function getEcho() {
+            const message = document.getElementById('echoMessage').value;
+            fetch(`http://localhost:3000/api/echo?message=${encodeURIComponent(message)}`)
+                .then(response => response.json())
+                .then(data => document.getElementById('echoResponse').innerText = JSON.stringify(data));
+        }
+
+        function getUpdate() {
+            const id = document.getElementById('updateId').value;
+            const newData = document.getElementById('updateData').value;
+            fetch(`http://localhost:3000/api/update?id=${encodeURIComponent(id)}&newData=${encodeURIComponent(newData)}`)
+                .then(response => response.json())
+                .then(data => document.getElementById('updateResponse').innerText = JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
